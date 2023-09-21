@@ -1,0 +1,4 @@
+py-algorand-sdk
+pyteal
+argparse
+python-decouple
