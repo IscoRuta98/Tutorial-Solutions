@@ -1,11 +1,7 @@
 import argparse
 from operations.generate_account import generate_keys
 from operations.send_algos import send_algos
-
-
-def create_nft():
-    # Add code here to create an NFT
-    pass
+from operations.create_nft import create_nft
 
 
 def main():
@@ -33,6 +29,10 @@ def main():
         "--sender-secret-phrase", type=str, help="Sender's secret phrase"
     )
 
+    parser.add_argument("--unit-name", type=str, help="Unit name for the NFT")
+
+    parser.add_argument("--asset-name", type=str, help="Asset name for the NFT")
+
     args = parser.parse_args()
 
     if args.option == "generate-key-pair":
@@ -47,8 +47,11 @@ def main():
                 f.write(f"Private Key: {private_key}\n")
                 f.write(f"Secret Phrase: {secret_phrase}\n")
     elif args.option == "create-nft":
-        create_nft()
-        print("NFT creation functionality is not implemented yet.")
+        if not (args.sender_secret_phrase and args.unit_name and args.asset_name):
+            print("Error: Missing required arguments for create-nft.")
+            parser.print_help()
+            return
+        create_nft(args.sender_secret_phrase, args.unit_name, args.asset_name)
     elif args.option == "send-algos":
         if not (args.receiver_address and args.amount and args.sender_secret_phrase):
             print("Error: Missing required arguments for send-algos.")
