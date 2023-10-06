@@ -4,8 +4,15 @@ alex_votes = App.globalGet(Bytes("alex_votes"))
 bob_votes = App.globalGet(Bytes("bob_votes"))
 max_votes = Int(100)
 
+handle_creation = Seq(
+    App.globalPut(Bytes("Votes"), Int(0)),
+    App.globalPut(Bytes("alex_votes"), Int(0)),
+    App.globalPut(Bytes("bob_votes"), Int(0)),
+    Approve(),
+)
 
-def vote_for_candidate(candidate):
+
+def vote_for_candidate(candidate: str):
     return Seq(
         If(
             alex_votes + bob_votes < max_votes,
@@ -31,7 +38,7 @@ def read_votes():
 
 router = Router(
     "Mock Voting System",
-    BareCallActions(no_op=OnCompleteAction.no_op()),
+    BareCallActions(no_op=OnCompleteAction.create_only(handle_creation)),
 )
 
 
